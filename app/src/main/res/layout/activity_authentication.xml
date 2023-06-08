@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.AuthenticationActivity">
+
+    <ImageView
+        android:id="@+id/imgBanner"
+        android:layout_width="match_parent"
+        android:layout_height="220dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/chatty_logo__1_"
+        android:contentDescription="@string/logo_of_the_app"/>
+    
+    <LinearLayout
+        android:id="@+id/firstlayout"
+        android:layout_below="@id/imgBanner"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/authTopMargin"
+        android:background="@drawable/view_bg"
+        android:orientation="vertical">
+        
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabLayoutMainAuth"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/layTopMargin"
+            android:background="@drawable/view_bg"
+            app:tabIndicatorFullWidth="true"
+            app:tabIndicatorColor="@color/mycolor10"
+            app:tabTextColor="@color/mycolor10"/>
+        
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/viewPager2MainAuth"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/viewPagerHeight"/>
+
+    </LinearLayout>
+
+</RelativeLayout>

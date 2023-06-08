@@ -1,0 +1,43 @@
+<resources>
+    <string name="app_name">Chatty</string>
+    <string name="logo_of_the_app">This image contains the text Chatty Pie which is the logo</string>
+    <string name="enter_email">Enter Email</string>
+    <string name="enter_your_password">Enter Your Password</string>
+    <string name="login">Login</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="confirm_your_password">Confirm your Password</string>
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="logout">Log Out</string>
+    <string name="setting">Settings</string>
+    <string name="about">About Us</string>
+    <string name="back_button">back button</string>
+    <string name="no_profile_image">No profile Image</string>
+    <string name="add_profile_button">Add profile button</string>
+    <string name="user_name">Name</string>
+    <string name="enter_your_name">Enter Your Name</string>
+    <string name="about_profile">Tell Something About You!</string>
+    <string name="about_me">About</string>
+    <string name="save">Save</string>
+    <string name="username_icon">Username icon</string>
+    <string name="name_description">This is not your username or pin. This name will be visible to others.</string>
+    <string name="email_icon">Email Icon</string>
+    <string name="about_icon">About Icon</string>
+    <string name="email">Email</string>
+    <string name="user_email">support@mdcoders.com</string>
+    <string name="edit_icon">Edit Icon</string>
+    <string name="add_camera_description">Clickable icon to add image form gallery or camera</string>
+    <string name="add_user_floatingBtn_description">Floating button for searching users</string>
+    <string name="search_placeholder">Search here...</string>
+    <string name="user_pfp">user pfp</string>
+    <string name="online">Online</string>
+    <string name="send_button">Send Button</string>
+    <string name="message">Message...</string>
+    <string name="tap_to_chat">Tap to Chat</string>
+    <string name="my_status">My Status</string>
+    <string name="add_status_btn_description">This is a button to add status</string>
+    <string name="status_update_txt">Tap to add Status Update</string>
+    <string name="choose_an_option">Choose an option</string>
+    <string name="camera_btn_description">It is a button to capture image</string>
+    <string name="gallery_btn__description">it is a button to choose image from gallery</string>
+</resources>

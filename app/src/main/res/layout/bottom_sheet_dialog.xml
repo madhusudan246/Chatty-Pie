@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/view_bg_bottom"
+    android:backgroundTint="@android:color/transparent"
+    android:backgroundTintMode="src_over">
+
+    <TextView
+        android:id="@+id/choose_option_txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/choose_an_option"
+        android:textSize="20sp"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/capture_camera_btn"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:background="@android:color/transparent"
+        android:clickable="true"
+        android:contentDescription="@string/camera_btn_description"
+        android:focusable="true"
+        android:padding="5dp"
+        android:src="@drawable/ic_camera"
+        app:layout_constraintBottom_toBottomOf="@+id/gallery_btn_choose"
+        app:layout_constraintEnd_toStartOf="@+id/gallery_btn_choose"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/choose_option_txt"
+        app:shapeAppearance="@style/Circular" />
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/gallery_btn_choose"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_marginStart="64dp"
+        android:layout_marginTop="24dp"
+        android:clickable="true"
+        android:contentDescription="@string/gallery_btn__description"
+        android:focusable="true"
+        android:padding="5dp"
+        android:src="@drawable/ic_gallery"
+        app:layout_constraintEnd_toEndOf="@+id/choose_option_txt"
+        app:layout_constraintStart_toEndOf="@+id/capture_camera_btn"
+        app:layout_constraintTop_toBottomOf="@+id/choose_option_txt"
+        app:shapeAppearanceOverlay="@style/Circular" />
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:layout_marginTop="48dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/gallery_btn_choose" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

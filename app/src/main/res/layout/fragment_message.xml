@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".fragments.Message">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/userSatLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/greyTint">
+
+        <ImageView
+            android:id="@+id/backArrowMessage"
+            android:layout_width="@dimen/cornerRadi"
+            android:layout_height="@dimen/cornerRadi"
+            android:contentDescription="@string/back_button"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/up_arrow" />
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/userImg"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginVertical="@dimen/layTopMargin"
+            android:padding="@dimen/padding_profile_img"
+            android:src="@drawable/no_profile"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.05"
+            app:layout_constraintStart_toEndOf="@+id/backArrowMessage"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.5"
+            app:shapeAppearanceOverlay="@style/Circular"
+            app:strokeColor="@color/grey"
+            app:strokeWidth="2dp" />
+
+        <TextView
+            android:id="@+id/userName"
+            android:layout_width="0dp"
+            android:paddingHorizontal="@dimen/messageTitlePadding"
+            android:layout_height="wrap_content"
+            android:text="@string/enter_your_name"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="@+id/userImg"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toEndOf="@+id/userImg"
+            app:layout_constraintTop_toTopOf="@+id/userImg"
+            app:layout_constraintVertical_bias="0.29000002" />
+
+        <TextView
+            android:id="@+id/userStatus"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="@dimen/messageTitlePadding"
+            android:text="@string/online"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="@+id/backArrowMessage"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/userImg"
+            app:layout_constraintTop_toBottomOf="@+id/userName" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/chatRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:layout_below="@id/userSatLayout"
+        android:layout_above="@id/messagingLayout"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/messagingLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@android:color/transparent">
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.Material3.TextInputLayout.FilledBox.Dense"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:placeholderText="@string/message"
+            app:placeholderTextColor="@color/grey"
+            app:boxBackgroundColor="@color/grey"
+            android:layout_marginHorizontal="@dimen/layTopMargin"
+            app:boxStrokeColor="@android:color/holo_green_light"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/sendBtn"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Medium">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/chatMessage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/sendBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:elevation="@dimen/padding_text"
+            android:src="@drawable/send_btn"
+            app:tint="@color/greyTint"
+            app:backgroundTint="@color/splash"
+            android:clickable="true"
+            android:layout_marginEnd="@dimen/layTopMargin"
+            app:shapeAppearance="@style/Circular"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:contentDescription="@string/send_button"
+            android:focusable="true" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</RelativeLayout>

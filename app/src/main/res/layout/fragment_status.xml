@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    tools:context=".fragments.Status">
+
+<!--    <TextView-->
+<!--        android:id="@+id/myStatusHeader"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:background="@color/grey"-->
+<!--        android:paddingStart="@dimen/paddingStart"-->
+<!--        android:paddingEnd="@dimen/paddingStart"-->
+<!--        android:paddingTop="5dp"-->
+<!--        android:paddingBottom="5dp"-->
+<!--        android:text="@string/my_status"-->
+<!--        android:textColor="@color/splash"-->
+<!--        android:textSize="16sp"-->
+<!--        android:textStyle="bold" />-->
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/paddingStart"
+        android:paddingEnd="@dimen/paddingStart"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/userStatusProfile"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/no_profile"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:shapeAppearanceOverlay="@style/Circular" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/addStatusBtn"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="-25dp"
+            android:layout_marginBottom="-10dp"
+            android:contentDescription="@string/add_status_btn_description"
+            android:src="@drawable/add_status"
+            app:backgroundTint="@color/splash"
+            app:fabCustomSize="20dp"
+            app:tint="@color/greyTint"
+            app:layout_constraintBottom_toBottomOf="@+id/userStatusProfile"
+            app:layout_constraintStart_toEndOf="@+id/userStatusProfile" />
+
+        <TextView
+            android:id="@+id/userStatusName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:text="@string/user_name"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@+id/userStatusProfile"
+            app:layout_constraintTop_toTopOf="@+id/userStatusProfile" />
+
+        <TextView
+            android:id="@+id/timeStampStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:text="@string/status_update_txt"
+            android:textSize="12sp"
+            android:textStyle="italic"
+            app:layout_constraintBottom_toBottomOf="@+id/userStatusProfile"
+            app:layout_constraintStart_toEndOf="@+id/userStatusProfile"
+            app:layout_constraintTop_toBottomOf="@+id/userStatusName" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</LinearLayout>

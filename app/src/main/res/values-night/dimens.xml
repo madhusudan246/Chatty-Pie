@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="splashSize">300dp</dimen>
+    <dimen name="splashMargin">200dp</dimen>
+    <dimen name="viewPagerHeight">400dp</dimen>
+    <dimen name="paddingLogin">30dp</dimen>
+    <dimen name="marginTopLogin">20dp</dimen>
+    <dimen name="cornerRadi">40dp</dimen>
+    <dimen name="authTopMargin">-35dp</dimen>
+    <dimen name="layTopMargin">10dp</dimen>
+    <dimen name="button_sz">24sp</dimen>
+    <dimen name="login_sz">100dp</dimen>
+</resources>

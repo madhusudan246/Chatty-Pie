@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="splashSize">300dp</dimen>
+    <dimen name="splashMargin">200dp</dimen>
+    <dimen name="login_sz">100dp</dimen>
+    <dimen name="progressBar">75dp</dimen>
+    <dimen name="viewPagerHeight">500dp</dimen>
+    <dimen name="cornerRadi">40dp</dimen>
+    <dimen name="paddingLogin">30dp</dimen>
+    <dimen name="marginTopLogin">20dp</dimen>
+    <dimen name="authTopMargin">-35dp</dimen>
+    <dimen name="layTopMargin">10dp</dimen>
+    <dimen name="button_sz">24sp</dimen>
+    <dimen name="profile_img_size">150dp</dimen>
+    <dimen name="padding_profile_img">5dp</dimen>
+    <dimen name="padding_text">5dp</dimen>
+    <dimen name="text_sz">16sp</dimen>
+    <dimen name="description_size">15sp</dimen>
+    <dimen name="name_sz">20sp</dimen>
+    <dimen name="emailTopMargin">-10dp</dimen>
+    <dimen name="icon_size">24dp</dimen>
+    <dimen name="marginAddPic">-72dp</dimen>
+    <dimen name="marginTopPic">-50dp</dimen>
+    <dimen name="addPicPadding">6dp</dimen>
+    <dimen name="addPhotoSize">50dp</dimen>
+    <dimen name="margin_floatingAction">20dp</dimen>
+    <dimen name="card_corner_radius">8dp</dimen>
+    <dimen name="elevation_cardView">12dp</dimen>
+    <dimen name="horizontal_margin">8dp</dimen>
+    <dimen name="constraint_padding">8dp</dimen>
+    <dimen name="square_card_size">50dp</dimen>
+    <dimen name="card_corner">100dp</dimen>
+    <dimen name="messageTitlePadding">10dp</dimen>
+    <dimen name="paddingStart">10dp</dimen>
+</resources>
