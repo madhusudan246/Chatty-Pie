@@ -4,8 +4,10 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.ActivityNotFoundException
+import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
@@ -14,14 +16,12 @@ import android.provider.MediaStore
 import android.provider.Settings
 import android.util.Log
 import android.view.Gravity
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.Toast
-import coil.load
-import coil.transform.CircleCropTransformation
+import androidx.fragment.app.Fragment
 import com.example.chatty.R
 import com.example.chatty.databinding.FragmentStatusBinding
 import com.example.chatty.modals.StoriesData
@@ -35,8 +35,11 @@ import com.google.firebase.storage.StorageReference
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
+import com.karumi.dexter.listener.PermissionDeniedResponse
+import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
+import com.karumi.dexter.listener.single.PermissionListener
 import com.squareup.picasso.Picasso
 import java.io.ByteArrayOutputStream
 import java.util.Date
@@ -50,13 +53,12 @@ class Status : Fragment() {
     private lateinit var reference: StorageReference
     private lateinit var storage: FirebaseStorage
     private lateinit var userId: String
-    private lateinit var selectedMediaUri: Uri
     private lateinit var documentReference: DocumentReference
     private lateinit var image: ByteArray
-    private val CAMERA_REQUEST_CODE = 1
 
     companion object {
-        private const val REQUEST_CODE = 123
+        private const val CAMERA_REQUEST_CODE = 1
+        private const val GALLERY_REQUEST_CODE = 2
     }
 
     override fun onCreateView(
@@ -118,6 +120,7 @@ class Status : Fragment() {
         }
         galleryBtn.setOnClickListener {
             dialog.dismiss()
+            galleryCheckPermission()
             Toast.makeText(requireContext(), "Gallery Button", Toast.LENGTH_SHORT).show()
         }
 
@@ -127,6 +130,41 @@ class Status : Fragment() {
         dialog.window?.attributes?.windowAnimations = R.style.DialogAnimation
         dialog.window?.setGravity(Gravity.BOTTOM)
 
+    }
+
+    private fun galleryCheckPermission() {
+        Dexter.withContext(requireContext())
+            .withPermission(
+                android.Manifest.permission.READ_EXTERNAL_STORAGE
+            )
+            .withListener(
+                object : PermissionListener{
+                    override fun onPermissionGranted(p0: PermissionGrantedResponse?) {
+                        gallery()
+                    }
+
+                    override fun onPermissionDenied(p0: PermissionDeniedResponse?) {
+                        Toast.makeText(requireActivity(), "You have denied the storage permission to select image", Toast.LENGTH_SHORT).show()
+
+                        showRotationalDialogForPermission()
+                    }
+
+                    override fun onPermissionRationaleShouldBeShown(
+                        p0: PermissionRequest?,
+                        p1: PermissionToken?
+                    ) {
+                        showRotationalDialogForPermission()
+                    }
+
+                }
+            )
+            .onSameThread().check()
+    }
+
+    private fun gallery() {
+        val intent = Intent(Intent.ACTION_PICK)
+        intent.type = "image/*"
+        startActivityForResult(intent, GALLERY_REQUEST_CODE)
     }
 
     private fun cameraCheckPermission() {
@@ -193,7 +231,7 @@ class Status : Fragment() {
 //                        transformations(CircleCropTransformation())
 //                    }
                     val byteArrayOutputStream = ByteArrayOutputStream()
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream)
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 75, byteArrayOutputStream)
                     image = byteArrayOutputStream.toByteArray()
 
                     val date = Date()
@@ -241,9 +279,71 @@ class Status : Fragment() {
                                 Log.e("Status", "Failed to upload media", exception)
                             }
                     }
+                    GALLERY_REQUEST_CODE -> {
+                        if (data != null) {
+                            if (data.data != null) {
+                                val selectedMediaUri = uriToCompressedBitmap(requireContext(),
+                                    data.data!!
+                                )
+                                val date = Date()
+                                val currDate = date.time
+                                // Process the selected media URI
+                                reference = storage.reference.child("$userId/Status")
+                                    .child(currDate.toString())
+
+                                reference.putBytes(selectedMediaUri)
+                                    .addOnSuccessListener { uploadTask ->
+                                        uploadTask.storage.downloadUrl.addOnSuccessListener { downloadUrl ->
+                                            Log.d("Status", "Image uploaded successfully. Download URL: $downloadUrl")
+
+                                            val stories = StoriesData(downloadUrl.toString(), currDate)
+                                            val status = hashMapOf(
+                                                "stories" to arrayListOf(stories)
+                                            )
+
+                                            documentReference.get()
+                                                .addOnSuccessListener { documentSnapshot ->
+                                                    if (documentSnapshot.exists()) {
+                                                        documentReference.update("stories", FieldValue.arrayUnion(stories))
+                                                            .addOnSuccessListener {
+                                                                Log.d("Status", "Status Updated Successfully")
+                                                            }
+                                                            .addOnFailureListener { exception ->
+                                                                Log.e("Status", "Failed to update status", exception)
+                                                            }
+                                                    } else {
+                                                        documentReference.set(status)
+                                                            .addOnSuccessListener {
+                                                                Log.d("Status", "Status Set Successfully")
+                                                            }
+                                                            .addOnFailureListener { exception ->
+                                                                Log.e("Status", "Failed to set status", exception)
+                                                            }
+                                                    }
+                                                }
+                                                .addOnFailureListener { exception ->
+                                                    Log.e("Status", "Failed to get document", exception)
+                                                }
+                                        }
+                                    }
+                                    .addOnFailureListener { exception ->
+                                        Log.e("Status", "Failed to upload media", exception)
+                                    }
+                            }
+                        }
+                    }
                 }
             }
         }
+    private fun uriToCompressedBitmap(context: Context, uri: Uri): ByteArray {
+        val pfd = context.contentResolver.openFileDescriptor(uri, "r")
+        val bitmap =
+            BitmapFactory.decodeFileDescriptor(pfd?.fileDescriptor, null, null)
+        val baos = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 75, baos)
+        pfd?.close()
+        return baos.toByteArray()
+    }
 
 //        if (requestCode == REQUEST_CODE && resultCode == Activity.RESULT_OK) {
 //            // Handle the selected or captured media here
