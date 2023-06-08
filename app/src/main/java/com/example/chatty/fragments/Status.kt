@@ -5,6 +5,7 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
@@ -19,13 +20,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.Toast
+import coil.load
+import coil.transform.CircleCropTransformation
 import com.example.chatty.R
 import com.example.chatty.databinding.FragmentStatusBinding
 import com.example.chatty.modals.StoriesData
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.imageview.ShapeableImageView
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
@@ -37,9 +38,8 @@ import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import com.squareup.picasso.Picasso
-import java.io.File
+import java.io.ByteArrayOutputStream
 import java.util.Date
-import java.util.jar.Attributes.Name
 
 class Status : Fragment() {
 
@@ -52,6 +52,7 @@ class Status : Fragment() {
     private lateinit var userId: String
     private lateinit var selectedMediaUri: Uri
     private lateinit var documentReference: DocumentReference
+    private lateinit var image: ByteArray
     private val CAMERA_REQUEST_CODE = 1
 
     companion object {
@@ -183,54 +184,62 @@ class Status : Fragment() {
         if(resultCode == Activity.RESULT_OK){
             when(requestCode) {
                 CAMERA_REQUEST_CODE -> {
-                    if (data != null) {
-                        if (data.data != null) {
-                            selectedMediaUri = data.data!!
-                            val date = Date()
-                            val currDate = date.time
-                            // Process the selected media URI
-                            reference = storage.reference.child("$userId/Status")
-                                .child(currDate.toString())
 
-                            reference.putFile(selectedMediaUri)
-                                .addOnSuccessListener { uploadTask ->
-                                    uploadTask.storage.downloadUrl.addOnSuccessListener { downloadUrl ->
-                                        Log.d("Status", "Image uploaded successfully. Download URL: $downloadUrl")
+                    val bitmap = data?.extras?.get("data") as Bitmap
 
-                                        val stories = StoriesData(downloadUrl.toString(), currDate)
-                                        val status = hashMapOf(
-                                            "stories" to arrayListOf(stories)
-                                        )
+//                    binding?.userStatusProfile?.load(bitmap){
+//                        crossfade(true)
+//                        crossfade(1000)
+//                        transformations(CircleCropTransformation())
+//                    }
+                    val byteArrayOutputStream = ByteArrayOutputStream()
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream)
+                    image = byteArrayOutputStream.toByteArray()
 
-                                        documentReference.get()
-                                            .addOnSuccessListener { documentSnapshot ->
-                                                if (documentSnapshot.exists()) {
-                                                    documentReference.update("stories", FieldValue.arrayUnion(stories))
-                                                        .addOnSuccessListener {
-                                                            Log.d("Status", "Status Updated Successfully")
-                                                        }
-                                                        .addOnFailureListener { exception ->
-                                                            Log.e("Status", "Failed to update status", exception)
-                                                        }
-                                                } else {
-                                                    documentReference.set(status)
-                                                        .addOnSuccessListener {
-                                                            Log.d("Status", "Status Set Successfully")
-                                                        }
-                                                        .addOnFailureListener { exception ->
-                                                            Log.e("Status", "Failed to set status", exception)
-                                                        }
-                                                }
+                    val date = Date()
+                    val currDate = date.time
+                    // Process the selected media URI
+                    reference = storage.reference.child("$userId/Status")
+                        .child(currDate.toString())
+
+                    reference.putBytes(image)
+                        .addOnSuccessListener { uploadTask ->
+                            uploadTask.storage.downloadUrl.addOnSuccessListener { downloadUrl ->
+                                    Log.d("Status", "Image uploaded successfully. Download URL: $downloadUrl")
+
+                                    val stories = StoriesData(downloadUrl.toString(), currDate)
+                                    val status = hashMapOf(
+                                        "stories" to arrayListOf(stories)
+                                    )
+
+                                    documentReference.get()
+                                        .addOnSuccessListener { documentSnapshot ->
+                                            if (documentSnapshot.exists()) {
+                                                documentReference.update("stories", FieldValue.arrayUnion(stories))
+                                                    .addOnSuccessListener {
+                                                        Log.d("Status", "Status Updated Successfully")
+                                                    }
+                                                    .addOnFailureListener { exception ->
+                                                        Log.e("Status", "Failed to update status", exception)
+                                                    }
+                                            } else {
+                                                documentReference.set(status)
+                                                    .addOnSuccessListener {
+                                                        Log.d("Status", "Status Set Successfully")
+                                                    }
+                                                    .addOnFailureListener { exception ->
+                                                        Log.e("Status", "Failed to set status", exception)
+                                                    }
                                             }
-                                            .addOnFailureListener { exception ->
-                                                Log.e("Status", "Failed to get document", exception)
-                                            }
-                                    }
+                                        }
+                                        .addOnFailureListener { exception ->
+                                            Log.e("Status", "Failed to get document", exception)
+                                        }
                                 }
-                                .addOnFailureListener { exception ->
-                                    Log.e("Status", "Failed to upload media", exception)
-                                }
-                        }
+                            }
+                            .addOnFailureListener { exception ->
+                                Log.e("Status", "Failed to upload media", exception)
+                            }
                     }
                 }
             }
@@ -289,7 +298,3 @@ class Status : Fragment() {
 //            }
 //        }
     }
-
-
-
-}
