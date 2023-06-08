@@ -7,20 +7,6 @@
     android:orientation="vertical"
     tools:context=".fragments.Status">
 
-<!--    <TextView-->
-<!--        android:id="@+id/myStatusHeader"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:background="@color/grey"-->
-<!--        android:paddingStart="@dimen/paddingStart"-->
-<!--        android:paddingEnd="@dimen/paddingStart"-->
-<!--        android:paddingTop="5dp"-->
-<!--        android:paddingBottom="5dp"-->
-<!--        android:text="@string/my_status"-->
-<!--        android:textColor="@color/splash"-->
-<!--        android:textSize="16sp"-->
-<!--        android:textStyle="bold" />-->
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -78,5 +64,25 @@
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/recent_updates"
+        android:layout_marginTop="@dimen/layTopMargin"
+        android:layout_marginBottom="@dimen/layTopMargin"
+        android:padding="@dimen/padding_text"
+        android:paddingStart="@dimen/recent_padding"
+        android:paddingEnd="@dimen/recent_padding"
+        android:textSize="12sp"
+        android:textStyle="italic"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewStatus"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/transparent"
+        tools:listitem="@layout/status_item"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 
 </LinearLayout>

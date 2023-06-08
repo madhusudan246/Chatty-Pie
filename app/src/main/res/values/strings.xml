@@ -40,4 +40,5 @@
     <string name="choose_an_option">Choose an option</string>
     <string name="camera_btn_description">It is a button to capture image</string>
     <string name="gallery_btn__description">it is a button to choose image from gallery</string>
+    <string name="recent_updates">Recent Updates</string>
 </resources>

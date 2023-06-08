@@ -31,4 +31,5 @@
     <color name="greyTint">#161f24</color>
     <color name="grey">#818181</color>
     <color name="back_arrow">#5e686f</color>
+    <color name="splash_white">#B9F6CA</color>
 </resources>

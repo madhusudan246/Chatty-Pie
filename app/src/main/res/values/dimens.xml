@@ -32,4 +32,5 @@
     <dimen name="card_corner">100dp</dimen>
     <dimen name="messageTitlePadding">10dp</dimen>
     <dimen name="paddingStart">10dp</dimen>
+    <dimen name="recent_padding">15dp</dimen>
 </resources>
