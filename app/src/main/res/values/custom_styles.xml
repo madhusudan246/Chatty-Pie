@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <style name="ShapeAppearanceOverlay.MyApp.Circle" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
     <style name="Circular">
         <item name="cornerSize">50%</item>
         <item name="backgroundColor">@color/greyTint</item>

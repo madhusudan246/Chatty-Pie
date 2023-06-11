@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="@dimen/layTopMargin"
+    android:paddingTop="@dimen/padding_text"
     android:paddingStart="@dimen/layTopMargin"
     android:paddingEnd="@dimen/layTopMargin">
 
@@ -14,7 +15,9 @@
         android:src="@drawable/no_profile"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:shapeAppearanceOverlay="@style/Circular" />
+        app:shapeAppearanceOverlay="@style/Circular"
+        app:strokeColor="@color/grey"
+        app:strokeWidth="2dp"/>
 
     <TextView
         android:id="@+id/userStatusName"

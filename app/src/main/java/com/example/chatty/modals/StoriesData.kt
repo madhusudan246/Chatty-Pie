@@ -2,11 +2,11 @@ package com.example.chatty.modals
 
 class StoriesData() {
     private lateinit var statusImageUri: String
-    private var LastUpdated: Long = 0
+    private var lastUpdated: Long = 0
 
     constructor(statusImageUri: String, LastUpdated: Long) : this() {
         this.statusImageUri = statusImageUri
-        this.LastUpdated = LastUpdated
+        this.lastUpdated = LastUpdated
     }
 
     fun getStatusImageUri(): String{
@@ -16,10 +16,10 @@ class StoriesData() {
         this.statusImageUri = statusImageUri
     }
     fun getLastUpdated(): Long{
-        return LastUpdated
+        return lastUpdated
     }
     fun setLastUpdated(timeStamp: Long){
-        this.LastUpdated = timeStamp
+        this.lastUpdated = timeStamp
     }
 
 }

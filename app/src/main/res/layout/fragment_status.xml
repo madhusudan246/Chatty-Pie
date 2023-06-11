@@ -36,6 +36,7 @@
             app:backgroundTint="@color/splash"
             app:fabCustomSize="20dp"
             app:tint="@color/greyTint"
+            android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="@+id/userStatusProfile"
             app:layout_constraintStart_toEndOf="@+id/userStatusProfile" />
 

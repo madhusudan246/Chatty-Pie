@@ -6,6 +6,7 @@ import android.app.Dialog
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
@@ -21,10 +22,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.Toast
+import androidx.annotation.ArrayRes
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.chatty.R
+import com.example.chatty.adapters.StatusAdapter
 import com.example.chatty.databinding.FragmentStatusBinding
 import com.example.chatty.modals.StoriesData
+import com.example.chatty.modals.UserStatusData
 import com.google.android.material.imageview.ShapeableImageView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentReference
@@ -42,7 +47,10 @@ import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import com.karumi.dexter.listener.single.PermissionListener
 import com.squareup.picasso.Picasso
 import java.io.ByteArrayOutputStream
+import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Date
+import java.util.Locale
 
 class Status : Fragment() {
 
@@ -55,6 +63,8 @@ class Status : Fragment() {
     private lateinit var userId: String
     private lateinit var documentReference: DocumentReference
     private lateinit var image: ByteArray
+    private lateinit var statusArrayList: ArrayList<UserStatusData>
+    private lateinit var statusAdapter: StatusAdapter
 
     companion object {
         private const val CAMERA_REQUEST_CODE = 1
@@ -72,6 +82,8 @@ class Status : Fragment() {
         fAuth = FirebaseAuth.getInstance()
         fStore = FirebaseFirestore.getInstance()
         storage = FirebaseStorage.getInstance()
+
+        statusArrayList = arrayListOf()
 
         userId = fAuth.currentUser?.uid.toString()
 
@@ -100,6 +112,93 @@ class Status : Fragment() {
         binding?.addStatusBtn?.setOnClickListener {
             showDialog()
         }
+
+        binding?.recyclerViewStatus?.setHasFixedSize(true)
+
+        val collectionReference = FirebaseFirestore.getInstance()
+            .collection("users")
+
+        val currUser = FirebaseAuth.getInstance().uid
+        // checking if user has status
+        val userReference = FirebaseFirestore.getInstance()
+            .collection("users")
+            .document(currUser.toString())
+            .collection("Status")
+            .document("Stories")
+
+//        userReference.addSnapshotListener { value, error ->
+//            if (error!=null){
+//                Log.d("Error", "Unable to fetch data")
+//            }
+//            else{
+//                if(value!=null){
+//                    val status = value.get("stories") as? ArrayList<Map<String, Any>>
+//
+//                    if(status?.size!=0){
+//                        binding?.addStatusBtn?.visibility = View.GONE
+//                        val strokeColor = ContextCompat.getColor(requireContext(), R.color.grey)
+//                    }
+//
+//                }
+//            }
+//        }
+
+        collectionReference.get()
+            .addOnSuccessListener { querySnapshot ->
+                statusArrayList.clear()
+                for (documentSnapshot in querySnapshot.documents) {
+                    if (documentSnapshot.id != currUser) {
+                        val documentReference = FirebaseFirestore.getInstance()
+                            .collection("users")
+                            .document(documentSnapshot.id)
+                            .collection("Status")
+                            .document("Stories")
+
+                        documentReference.addSnapshotListener { value, error ->
+                            if (error != null) {
+                                Log.d("Error", "Unable to fetch data")
+                            } else {
+                                if (value != null) {
+                                    if (value.exists()) {
+                                        collectionReference.document(documentSnapshot.id)
+                                            .get().addOnCompleteListener { task ->
+                                                if (task.isSuccessful) {
+                                                    val docResult = task.result
+                                                    if (docResult != null) {
+                                                        if (docResult.exists()) {
+                                                            val name = docResult.get("Name")
+                                                            val profileImage =
+                                                                docResult.get("userProfilePhoto")
+                                                            val status = UserStatusData(
+                                                                name.toString(),
+                                                                profileImage.toString(),
+                                                                documentSnapshot.id
+                                                            )
+
+                                                            statusArrayList.add(status)
+                                                            statusAdapter = StatusAdapter(
+                                                                requireActivity(),
+                                                                statusArrayList
+                                                            )
+
+                                                            binding?.recyclerViewStatus?.adapter =
+                                                                statusAdapter
+
+                                                        }
+                                                    }
+
+                                                }
+
+                                        }
+                                    }
+                                }
+
+                            }
+                        }
+                    }
+                }
+            }
+
 
 
         return view
@@ -233,9 +332,8 @@ class Status : Fragment() {
                     val byteArrayOutputStream = ByteArrayOutputStream()
                     bitmap.compress(Bitmap.CompressFormat.JPEG, 75, byteArrayOutputStream)
                     image = byteArrayOutputStream.toByteArray()
+                    val currDate = Date().time
 
-                    val date = Date()
-                    val currDate = date.time
                     // Process the selected media URI
                     reference = storage.reference.child("$userId/Status")
                         .child(currDate.toString())
@@ -285,8 +383,8 @@ class Status : Fragment() {
                                 val selectedMediaUri = uriToCompressedBitmap(requireContext(),
                                     data.data!!
                                 )
-                                val date = Date()
-                                val currDate = date.time
+                                val currDate = Date().time
+
                                 // Process the selected media URI
                                 reference = storage.reference.child("$userId/Status")
                                     .child(currDate.toString())
