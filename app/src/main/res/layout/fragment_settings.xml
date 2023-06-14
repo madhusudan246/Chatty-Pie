@@ -147,7 +147,9 @@
                     android:id="@+id/aboutTxt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:paddingTop="@dimen/padding_text"
                     android:text="@string/about_profile"
+                    android:autoSizeTextType="uniform"
                     android:textSize="@dimen/name_sz" />
 
             </LinearLayout>

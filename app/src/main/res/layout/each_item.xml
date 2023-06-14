@@ -54,6 +54,7 @@
             android:text="@string/about_profile"
             android:textSize="@dimen/text_sz"
             android:textStyle="italic"
+            android:paddingTop="@dimen/padding_text"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.05"

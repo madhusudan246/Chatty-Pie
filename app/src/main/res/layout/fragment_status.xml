@@ -15,7 +15,7 @@
         android:paddingTop="5dp"
         android:paddingBottom="5dp">
 
-        <com.google.android.material.imageview.ShapeableImageView
+        <ImageView
             android:id="@+id/userStatusProfile"
             android:layout_width="50dp"
             android:layout_height="50dp"

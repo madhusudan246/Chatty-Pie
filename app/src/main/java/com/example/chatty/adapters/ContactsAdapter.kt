@@ -10,6 +10,10 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import coil.ImageLoader
+import coil.request.CachePolicy
+import coil.request.ImageRequest
+import coil.transform.CircleCropTransformation
 import com.example.chatty.R
 import com.example.chatty.activities.MenuActivity
 import com.example.chatty.modals.UserListData
@@ -28,9 +32,26 @@ class ContactsAdapter(val context: Activity?, private var userList: ArrayList<Us
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         Log.d("Holder", "Holder set")
         val user: UserListData = userList[position]
+        val imageLoader = ImageLoader.Builder(context!!)
+            .diskCachePolicy(CachePolicy.ENABLED) // Enable disk caching
+            .build()
+
         holder.userName.text = user.Name
         holder.userAbout.text = user.About
-        Picasso.get().load(user.userProfilePhoto).placeholder(R.drawable.no_profile).error(R.drawable.no_profile).into(holder.userProfile)
+        val request = ImageRequest.Builder(context)
+            .data(user.userProfilePhoto)
+            .crossfade(true)
+            .crossfade(1000)
+            .transformations(CircleCropTransformation())
+            .placeholder(R.drawable.no_profile)
+            .error(R.drawable.no_profile)
+            .target(holder.userProfile)
+            .build()
+
+        imageLoader.enqueue(request)
+
+
+//        Picasso.get().load(user.userProfilePhoto).placeholder(R.drawable.no_profile).error(R.drawable.no_profile).into(holder.userProfile)
 
         holder.itemView.setOnClickListener {
             val intent = Intent(context, MenuActivity::class.java)
@@ -38,7 +59,7 @@ class ContactsAdapter(val context: Activity?, private var userList: ArrayList<Us
             intent.putExtra("Uid", user.uid)
             intent.putExtra("Name", user.Name)
             intent.putExtra("RecieverProfilePic", user.userProfilePhoto)
-            context?.startActivity(intent)
+            context.startActivity(intent)
         }
     }
 

@@ -4,24 +4,22 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="@dimen/layTopMargin"
-    android:paddingTop="@dimen/padding_text"
-    android:paddingStart="@dimen/layTopMargin"
-    android:paddingEnd="@dimen/layTopMargin">
+    android:padding="@dimen/layTopMargin"
+    android:background="?selectableItemBackground"
+    >
 
-    <com.google.android.material.imageview.ShapeableImageView
+    <ImageView
         android:id="@+id/userStatusProfile"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:src="@drawable/no_profile"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:shapeAppearanceOverlay="@style/Circular"
-        app:strokeColor="@color/grey"
-        app:strokeWidth="2dp"/>
+        android:contentDescription="@string/status_user_profile_image_description" />
 
     <TextView
         android:id="@+id/userStatusName"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginTop="4dp"
@@ -33,13 +31,14 @@
 
     <TextView
         android:id="@+id/timeStampStatus"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:text="@string/status_update_txt"
         android:textSize="12sp"
         android:textStyle="italic"
         app:layout_constraintBottom_toBottomOf="@+id/userStatusProfile"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/userStatusProfile"
         app:layout_constraintTop_toBottomOf="@+id/userStatusName" />
 

@@ -5,7 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="5dp"
-    android:layout_marginBottom="3dp">
+    android:layout_marginBottom="3dp"
+    android:padding="@dimen/layTopMargin"
+    android:background="?selectableItemBackground">
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/userProfilePicture"
@@ -18,7 +20,6 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.MyApp.Circle"
         app:srcCompat="@drawable/no_profile" />
 
     <TextView

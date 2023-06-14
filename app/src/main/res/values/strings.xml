@@ -41,4 +41,7 @@
     <string name="camera_btn_description">It is a button to capture image</string>
     <string name="gallery_btn__description">it is a button to choose image from gallery</string>
     <string name="recent_updates">Recent Updates</string>
+    <string name="status_view_img_description">This image contains the status of the user</string>
+    <string name="status_user_profile_image_description">This image contains the profile picture of the user</string>
+    <string name="stories_image_view_description">This image contains the stories of the user</string>
 </resources>

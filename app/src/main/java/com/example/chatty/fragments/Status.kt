@@ -6,7 +6,6 @@ import android.app.Dialog
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
-import android.content.res.ColorStateList
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
@@ -22,9 +21,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.Toast
-import androidx.annotation.ArrayRes
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import coil.ImageLoader
+import coil.request.CachePolicy
+import coil.request.ImageRequest
+import coil.transform.CircleCropTransformation
 import com.example.chatty.R
 import com.example.chatty.adapters.StatusAdapter
 import com.example.chatty.databinding.FragmentStatusBinding
@@ -45,12 +46,8 @@ import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import com.karumi.dexter.listener.single.PermissionListener
-import com.squareup.picasso.Picasso
 import java.io.ByteArrayOutputStream
-import java.text.SimpleDateFormat
-import java.util.Calendar
 import java.util.Date
-import java.util.Locale
 
 class Status : Fragment() {
 
@@ -104,7 +101,23 @@ class Status : Fragment() {
 
                         binding?.userStatusName?.text = userName
 
-                        Picasso.get().load(profileUrl).placeholder(R.drawable.no_profile).error(R.drawable.no_profile).into(binding?.userStatusProfile)
+                        val imageLoader = ImageLoader.Builder(requireContext())
+                            .diskCachePolicy(CachePolicy.ENABLED) // Enable disk caching
+                            .build()
+
+                        val request = ImageRequest.Builder(requireContext())
+                            .data(profileUrl)
+                            .crossfade(true)
+                            .crossfade(1000)
+                            .transformations(CircleCropTransformation())
+                            .placeholder(R.drawable.no_profile)
+                            .error(R.drawable.no_profile)
+                            .target(binding?.userStatusProfile!!)
+                            .build()
+
+                        imageLoader.enqueue(request)
+
+//                        Picasso.get().load(profileUrl).placeholder(R.drawable.no_profile).error(R.drawable.no_profile).into(binding?.userStatusProfile)
                     }
                 }
             }
