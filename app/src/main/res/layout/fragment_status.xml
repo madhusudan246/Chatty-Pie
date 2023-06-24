@@ -8,6 +8,7 @@
     tools:context=".fragments.Status">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/userStatus"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingStart="@dimen/paddingStart"
@@ -23,7 +24,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:shapeAppearanceOverlay="@style/Circular" />
+            app:shapeAppearanceOverlay="@style/Circular"
+            tools:ignore="ContentDescription" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/addStatusBtn"

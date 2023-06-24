@@ -44,4 +44,5 @@
     <string name="status_view_img_description">This image contains the status of the user</string>
     <string name="status_user_profile_image_description">This image contains the profile picture of the user</string>
     <string name="stories_image_view_description">This image contains the stories of the user</string>
+    <string name="play_btn_description">it will be used as play and pause button</string>
 </resources>

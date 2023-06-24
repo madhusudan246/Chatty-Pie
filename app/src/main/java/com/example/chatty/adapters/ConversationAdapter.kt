@@ -59,7 +59,7 @@ class ConversationAdapter(val context: Activity?, private  var conversationList:
                 if(value!=null) {
                     val messages = value.get("message") as? ArrayList<Map<String, Any>>
 
-                    val recentMsg = messages?.last()?.get("message").toString()
+                    val recentMsg = ellipsize(messages?.last()?.get("message").toString())
                     val recentMsgTime: Long? = messages?.last()?.get("timeStamp") as? Long
                     val dateFormat = SimpleDateFormat("hh:mm a", Locale.getDefault())
 
@@ -97,4 +97,11 @@ class ConversationAdapter(val context: Activity?, private  var conversationList:
             context.startActivity(intent)
         }
     }
+
+    private fun ellipsize(input: String?): String? {
+        return if (input == null || input.length < 18) {
+            input
+        } else input.substring(0, 18) + "..."
+    }
+
 }

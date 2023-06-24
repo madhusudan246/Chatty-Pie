@@ -27,6 +27,7 @@ import coil.request.CachePolicy
 import coil.request.ImageRequest
 import coil.transform.CircleCropTransformation
 import com.example.chatty.R
+import com.example.chatty.activities.MenuActivity
 import com.example.chatty.adapters.StatusAdapter
 import com.example.chatty.databinding.FragmentStatusBinding
 import com.example.chatty.modals.StoriesData
@@ -51,6 +52,9 @@ import java.util.Date
 
 class Status : Fragment() {
 
+    private var userName: String? = null
+    private var profileUrl: String? = null
+    private var storiesArray: ArrayList<Map<String, Any>> = arrayListOf()
     private var _binding: FragmentStatusBinding? = null
     private val binding get() = _binding
     private lateinit var fAuth: FirebaseAuth
@@ -96,8 +100,8 @@ class Status : Fragment() {
             .addOnSuccessListener { task ->
                 if(task!=null){
                     if(task.exists()){
-                        val profileUrl = task.get("userProfilePhoto").toString()
-                        val userName = task.get("Name").toString()
+                        profileUrl = task.get("userProfilePhoto").toString()
+                        userName = task.get("Name").toString()
 
                         binding?.userStatusName?.text = userName
 
@@ -126,10 +130,36 @@ class Status : Fragment() {
             showDialog()
         }
 
+        binding?.userStatusProfile?.setOnClickListener {
+            showDialog()
+        }
+
         binding?.recyclerViewStatus?.setHasFixedSize(true)
 
-        val collectionReference = FirebaseFirestore.getInstance()
+        val collectionReference = fStore
             .collection("users")
+
+
+        binding?.userStatus?.setOnClickListener {
+            documentReference.addSnapshotListener { value, error ->
+                if(error != null){
+                    Log.d("Error", "Unable to fetch data")
+                }
+                else{
+                    if(value != null){
+                        val stories = value.get("stories") as? ArrayList<Map<String, Any>>
+                        storiesArray = stories!!
+
+                        val intent = Intent(context, MenuActivity::class.java)
+                        intent.putExtra("OptionName", "StatusScreen")
+                        intent.putExtra("Name", userName)
+                        intent.putExtra("ProfilePhoto", profileUrl)
+                        intent.putExtra("stories", storiesArray)
+                        context?.startActivity(intent)
+                    }
+                }
+            }
+        }
 
         val currUser = FirebaseAuth.getInstance().uid
         // checking if user has status

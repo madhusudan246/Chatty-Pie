@@ -1,14 +1,14 @@
 package com.example.chatty.fragments
 
 import android.annotation.SuppressLint
-import android.graphics.Bitmap
-import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.util.Log
 import android.view.GestureDetector
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
+import android.view.View.OnTouchListener
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.view.animation.AnimationUtils
@@ -20,10 +20,7 @@ import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
-import com.bumptech.glide.request.RequestOptions
-import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.target.Target
-import com.bumptech.glide.request.transition.Transition
 import com.example.chatty.R
 import com.example.chatty.databinding.FragmentStoryViewerBinding
 import jp.shts.android.storiesprogressview.StoriesProgressView
@@ -35,7 +32,7 @@ import kotlin.math.abs
 
 class StoryViewer : Fragment(), StoriesProgressView.StoriesListener, GestureDetector.OnGestureListener {
     private var pressTime: Long = 0L
-    private var limit: Long = 500L
+    private var limit: Long = 1000L
     private var _binding: FragmentStoryViewerBinding? = null
     private val binding get() = _binding
 
@@ -46,23 +43,8 @@ class StoryViewer : Fragment(), StoriesProgressView.StoriesListener, GestureDete
     private lateinit var gestureDetector: GestureDetectorCompat
 
     private var counter = 0
-
-    @SuppressLint("ClickableViewAccessibility")
-    private val onTouchListener = View.OnTouchListener { _, event ->
-        when (event.action) {
-            MotionEvent.ACTION_DOWN -> {
-                pressTime = System.currentTimeMillis()
-                binding?.stories?.pause()
-                false
-            }
-            MotionEvent.ACTION_UP -> {
-                val now = System.currentTimeMillis()
-                binding?.stories?.resume()
-                limit < now - pressTime
-            }
-            else -> false
-        }
-    }
+    private var flag = true
+    private var isPaused = false
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreateView(
@@ -128,23 +110,81 @@ class StoryViewer : Fragment(), StoriesProgressView.StoriesListener, GestureDete
         binding?.stories?.setStoriesCount(resources.size)
         binding?.stories?.setStoryDuration(5000L)
         binding?.stories?.setStoriesListener(this)
-        binding?.stories?.startStories(0)
 
         loadImage(resources[counter])
 
         binding?.timeStampStatus?.text = timeStampList[counter]
 
         binding?.reverse?.setOnClickListener {
-            binding?.stories?.reverse()
+            onPrev()
+//            binding?.stories?.reverse()
+//            flag = false
+//            it.setOnTouchListener(object : View.OnTouchListener {
+//                    @SuppressLint("ClickableViewAccessibility")
+//                    override fun onTouch(v: View?, event: MotionEvent?): Boolean {
+////                        flag = false
+//                        return !gestureDetector.onTouchEvent(event!!)
+//                    }
+//
+//                })
         }
 
-        binding?.reverse?.setOnTouchListener(onTouchListener)
+//        binding?.reverse?.setOnTouchListener(onTouchListener)
 
         binding?.skip?.setOnClickListener {
-            binding?.stories?.skip()
+            onNext()
+//            flag = true
+//            it.setOnTouchListener(object : View.OnTouchListener {
+//
+//                @SuppressLint("ClickableViewAccessibility")
+//                override fun onTouch(v: View?, event: MotionEvent?): Boolean {
+////                    flag = true
+//                    return !gestureDetector.onTouchEvent(event!!)
+//                }
+//
+//            })
+////            binding?.stories?.skip()
         }
 
-        binding?.skip?.setOnTouchListener(onTouchListener)
+
+//        binding?.skip?.setOnTouchListener(object : View.OnTouchListener {
+//
+//            @SuppressLint("ClickableViewAccessibility")
+//            override fun onTouch(v: View?, event: MotionEvent?): Boolean {
+//                flag = true
+//                return !gestureDetector.onTouchEvent(event!!)
+//            }
+//
+//        })
+
+
+//        binding?.reverse?.setOnTouchListener(object : View.OnTouchListener {
+//            @SuppressLint("ClickableViewAccessibility")
+//            override fun onTouch(v: View?, event: MotionEvent?): Boolean {
+//                flag = false
+//                return !gestureDetector.onTouchEvent(event!!)
+//            }
+//
+//        })
+
+        binding?.playPause?.setOnClickListener {
+            if(!isPaused){
+                Glide.with(requireContext())
+                    .load(R.drawable.ic_play)
+                    .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                    .into(binding?.playPause!!)
+                binding?.stories?.pause()
+                isPaused = true
+            }
+            else{
+                Glide.with(requireContext())
+                    .load(R.drawable.ic_pause)
+                    .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                    .into(binding?.playPause!!)
+                binding?.stories?.resume()
+                isPaused = false
+            }
+        }
 
         binding?.flung?.setOnTouchListener(object : View.OnTouchListener {
             override fun onTouch(v: View?, event: MotionEvent?): Boolean {
@@ -161,19 +201,31 @@ class StoryViewer : Fragment(), StoriesProgressView.StoriesListener, GestureDete
     }
 
     override fun onNext() {
-        counter++
+        if(flag){
+            counter++
+            flag = false
+        }
+        Log.d("Counter Increment", "Incremented")
         if (counter < resources.size) {
+            binding?.stories?.pause()
             loadImage(resources[counter])
             binding?.timeStampStatus?.text = timeStampList[counter]
+        }
+        else{
+            requireActivity().finish()
         }
     }
 
     override fun onPrev() {
         if (counter > 0) {
             counter--
-            loadImage(resources[counter])
-            binding?.timeStampStatus?.text = timeStampList[counter]
         }
+        else{
+            counter = 0
+        }
+
+        loadImage(resources[counter])
+        binding?.timeStampStatus?.text = timeStampList[counter]
     }
 
     override fun onComplete() {
@@ -194,8 +246,18 @@ class StoryViewer : Fragment(), StoriesProgressView.StoriesListener, GestureDete
     }
 
     override fun onSingleTapUp(p0: MotionEvent): Boolean {
-        //not used
-        return false
+        if (flag) {
+            Toast.makeText(context, "Skipped", Toast.LENGTH_SHORT).show()
+//            binding?.stories?.destroy()
+            onNext()
+        }
+
+        if(!flag){
+            Toast.makeText(context, "Previous", Toast.LENGTH_SHORT).show()
+//            binding?.stories?.destroy()
+            onPrev()
+        }
+        return true
     }
 
     override fun onScroll(p0: MotionEvent, p1: MotionEvent, p2: Float, p3: Float): Boolean {
@@ -259,7 +321,9 @@ class StoryViewer : Fragment(), StoriesProgressView.StoriesListener, GestureDete
 
     private fun startProgressView() {
         binding?.stories?.destroy()
+        Log.d("Counter", "$counter")
         binding?.stories?.startStories(counter)
+        flag = true
     }
 
     companion object{
