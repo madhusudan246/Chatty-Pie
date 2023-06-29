@@ -50,9 +50,6 @@ class ContactsAdapter(val context: Activity?, private var userList: ArrayList<Us
 
         imageLoader.enqueue(request)
 
-
-//        Picasso.get().load(user.userProfilePhoto).placeholder(R.drawable.no_profile).error(R.drawable.no_profile).into(holder.userProfile)
-
         holder.itemView.setOnClickListener {
             val intent = Intent(context, MenuActivity::class.java)
             intent.putExtra("OptionName", "MessagingScreen")
