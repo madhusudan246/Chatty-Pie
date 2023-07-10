@@ -9,6 +9,7 @@
 
     <style name="Theme.Chatty" parent="Base.Theme.Chatty" />
 
+    <!-- Splash Screen theme. -->
     <style name="splashScreenTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Customize your light theme here. -->
         <item name="android:windowBackground">@drawable/splash_image</item>
@@ -16,6 +17,7 @@
         <item name="colorControlActivated">#FF99CC00</item>
     </style>
 
+    <!-- Dialog Animation. -->
     <style name="DialogAnimation">
         <item name="android:windowEnterAnimation">@anim/slide_in_bottom</item>
         <item name="android:windowExitAnimation">@anim/slide_out_bottom</item>

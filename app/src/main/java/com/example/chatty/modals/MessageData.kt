@@ -3,13 +3,17 @@ package com.example.chatty.modals
 class MessageData() {
     private var messageId: String = "0"
     private lateinit var message: String
+    private lateinit var contentType: String
     private lateinit var senderId: String
+    private lateinit var caption: String
     private var timeStamp: Long = 0
 
-    constructor(message: String, senderId: String, timeStamp: Long) : this() {
+    constructor(message: String, senderId: String, timeStamp: Long, contentType: String, caption: String) : this() {
         this.message = message
         this.senderId = senderId
         this.timeStamp = timeStamp
+        this.contentType = contentType
+        this.caption = caption
     }
 
 
@@ -25,6 +29,21 @@ class MessageData() {
     fun setMessage(message: String){
         this.message = message
     }
+
+    fun getCaption(): String{
+        return caption
+    }
+    fun setCaption(caption: String){
+        this.caption = caption
+    }
+
+    fun getContentType(): String{
+        return contentType
+    }
+    fun setContentType(contentType: String){
+        this.contentType = contentType
+    }
+
     fun getSenderId(): String{
         return senderId
     }

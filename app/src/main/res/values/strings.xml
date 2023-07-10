@@ -45,4 +45,8 @@
     <string name="status_user_profile_image_description">This image contains the profile picture of the user</string>
     <string name="stories_image_view_description">This image contains the stories of the user</string>
     <string name="play_btn_description">it will be used as play and pause button</string>
+    <string name="recieve_Img_description">Image recieved by user</string>
+    <string name="sender_image_description">Image sent by user</string>
+    <string name="caption">Caption Here...</string>
+    <string name="upload_image_button">Upload Image button</string>
 </resources>
