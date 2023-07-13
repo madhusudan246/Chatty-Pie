@@ -57,9 +57,15 @@ class ConversationAdapter(val context: Activity?, private  var conversationList:
             }
             else{
                 if(value!=null) {
+                    holder.binding.contentImg.visibility = View.GONE
+
                     val messages = value.get("message") as? ArrayList<Map<String, Any>>
 
-                    val recentMsg = ellipsize(messages?.last()?.get("message").toString())
+                    var recentMsg = ellipsize(messages?.last()?.get("message").toString())
+                    if(messages?.last()?.get("contentType").toString() == "Image"){
+                        holder.binding.contentImg.visibility = View.VISIBLE
+                        recentMsg = ellipsize(messages?.last()?.get("caption").toString())
+                    }
                     val recentMsgTime: Long? = messages?.last()?.get("timeStamp") as? Long
                     val dateFormat = SimpleDateFormat("hh:mm a", Locale.getDefault())
 

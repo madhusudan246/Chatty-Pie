@@ -278,7 +278,6 @@ class StoryViewer : Fragment(), StoriesProgressView.StoriesListener, GestureDete
 
         if (event2.y - event1.y > SWIPE_MIN_DISTANCE && abs(velocityY) > SWIPE_THRESHOLD_VELOCITY) {
             // Swiped from top to bottom (bottom to top is ignored in this case)
-            Toast.makeText(context, "Flinged!!", Toast.LENGTH_SHORT).show()
             requireActivity().finish()
             val slideFromUpAnimation = AnimationUtils.loadAnimation(requireActivity(), R.anim.slide_out_bottom)
             val rootView = requireActivity().findViewById<View>(android.R.id.content)

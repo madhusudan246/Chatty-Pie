@@ -5,6 +5,7 @@
          <item name="colorPrimary">@color/splash</item>
         <item name="android:statusBarColor">@color/greyTint</item>
         <item name="colorAccent">@color/splash</item>
+        <item name="android:windowContentTransitions">true</item>
     </style>
 
     <style name="Theme.Chatty" parent="Base.Theme.Chatty" />

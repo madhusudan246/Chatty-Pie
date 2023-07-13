@@ -15,6 +15,7 @@
         android:padding="4dp"
         android:scaleType="centerCrop"
         android:src="@android:drawable/screen_background_light"
+        android:transitionName="@string/msg_image"
         android:contentDescription="@string/recieve_Img_description" />
 
     <TextView
@@ -30,6 +31,24 @@
         android:textColor="@color/white"
         android:textSize="18sp"
         android:visibility="visible"
-        android:layout_alignBottom="@id/recieverImage"/>
+        android:layout_marginTop="@dimen/authTopMargin"
+        android:layout_below="@id/recieverImage"/>
+
+    <TextView
+        android:id="@+id/extendableText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingStart="20dp"
+        android:paddingTop="10dp"
+        android:paddingEnd="15dp"
+        android:paddingBottom="10dp"
+        android:text="@string/show_more"
+        android:background="?attr/selectableItemBackground"
+        android:contextClickable="true"
+        android:focusable="true"
+        android:visibility="gone"
+        android:layout_alignBottom="@id/recieverMsg"
+        android:layout_alignEnd="@id/recieverMsg"
+        android:textColor="@color/splash"/>
 
 </RelativeLayout>

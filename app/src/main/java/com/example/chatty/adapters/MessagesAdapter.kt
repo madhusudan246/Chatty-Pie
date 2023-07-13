@@ -1,23 +1,32 @@
 package com.example.chatty.adapters
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
+import android.nfc.Tag
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityOptionsCompat
+import androidx.core.view.ViewCompat
+import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.chatty.R
+import com.example.chatty.activities.MenuActivity
 import com.example.chatty.databinding.ItemRecieveBinding
 import com.example.chatty.databinding.ItemRecieveImgBinding
 import com.example.chatty.databinding.ItemSendBinding
 import com.example.chatty.databinding.ItemSendImgBinding
+import com.example.chatty.fragments.ImageViewer
 import com.example.chatty.modals.MessageData
 import com.google.firebase.auth.FirebaseAuth
 
 class MessagesAdapter(private val context: Context?,
-                      private val messageData: ArrayList<MessageData>): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+                      private val messageData: ArrayList<MessageData>, private val fragmentManager: FragmentManager): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     companion object {
         const val ITEM_SENT = 1
@@ -44,13 +53,12 @@ class MessagesAdapter(private val context: Context?,
 
     override fun getItemViewType(position: Int): Int {
         val message = messageData[position]
-        var result = ITEM_SENT
-        if(FirebaseAuth.getInstance().uid == message.getSenderId()){
-            if (message.getContentType() == "Image") result = ITEM_SENT_IMAGE
-            else result = ITEM_SENT
+        val result: Int = if(FirebaseAuth.getInstance().uid == message.getSenderId()){
+            if (message.getContentType() == "Image") ITEM_SENT_IMAGE
+            else ITEM_SENT
         }else {
-            if (message.getContentType() == "Image") result = ITEM_RECEIVE_IMAGE
-            else result = ITEM_RECEIVE
+            if (message.getContentType() == "Image") ITEM_RECEIVE_IMAGE
+            else ITEM_RECEIVE
         }
         return result
     }
@@ -76,42 +84,95 @@ class MessagesAdapter(private val context: Context?,
 
         Log.d("onBindViewHolder", "Initialized")
 
-        if(holder is SentViewHolder){
-            holder.binding.senderMsg.text = message.getMessage()
-        }
-        else if(holder is RecieveViewHolder){
-            holder.binding.recieverMsg.text = message.getMessage()
-        }
-        else if(holder is SentImageViewHolder){
-            holder.binding.senderMsg.text = message.getCaption()
-            Log.d("Caption", message.getCaption())
+        val data: Array<String> = arrayOf(message.getCaption(), message.getMessage())
 
-            if(message.getCaption() == ""){
-                holder.binding.senderMsg.visibility = View.GONE
+        when (holder) {
+            is SentViewHolder -> {
+                holder.binding.senderMsg.text = message.getMessage()
             }
 
-            if (context != null) {
-                Glide.with(context)
-                    .load(message.getMessage())
-                    .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
-                    .into(holder.binding.senderImage)
-            }
-        }
-        else if(holder is RecieveImageViewHolder){
-            holder.binding.recieverMsg.text = message.getCaption()
-            Log.d("Caption", message.getCaption())
-
-            if(message.getCaption() == ""){
-                holder.binding.recieverMsg.visibility = View.GONE
+            is RecieveViewHolder -> {
+                holder.binding.recieverMsg.text = message.getMessage()
             }
 
-            if (context != null) {
-                Glide.with(context)
-                    .load(message.getMessage())
-                    .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
-                    .into(holder.binding.recieverImage)
+            is SentImageViewHolder -> {
+                holder.binding.extendableText.visibility = View.GONE
+
+                holder.binding.senderMsg.text = ellipsize(message.getCaption())
+
+                if(message.getCaption().length >= 100){
+                    holder.binding.extendableText.visibility = View.VISIBLE
+                }
+
+                holder.binding.extendableText.setOnClickListener {
+                    holder.binding.senderMsg.text = message.getCaption()
+                    holder.binding.extendableText.visibility = View.GONE
+                }
+
+                if(message.getCaption() == ""){
+                    holder.binding.senderMsg.visibility = View.GONE
+                }
+
+                if (context != null) {
+                    Glide.with(context)
+                        .load(message.getMessage())
+                        .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                        .into(holder.binding.senderImage)
+                }
+
+                holder.binding.senderImage.setOnClickListener {
+                    val intent = Intent(context, MenuActivity::class.java)
+                    val options = ActivityOptionsCompat.makeSceneTransitionAnimation(context as Activity, holder.binding.senderImage, ViewCompat.getTransitionName(holder.binding.senderImage).toString())
+                    intent.putExtra("OptionName", "ImageViewer")
+                    intent.putExtra("Caption", message.getCaption())
+                    intent.putExtra("ImageURL", message.getMessage())
+                    context.startActivity(intent, options.toBundle())
+                }
+            }
+
+            is RecieveImageViewHolder -> {
+                holder.binding.extendableText.visibility = View.GONE
+
+                holder.binding.recieverMsg.text = ellipsize(message.getCaption())
+
+                if(message.getCaption().length >= 100){
+                    holder.binding.extendableText.visibility = View.VISIBLE
+                }
+
+                holder.binding.extendableText.setOnClickListener {
+                    Log.d("Caption Size", "${message.getCaption().length}")
+                    holder.binding.recieverMsg.text = message.getCaption()
+                    holder.binding.extendableText.visibility = View.GONE
+                }
+
+                if(message.getCaption() == ""){
+                    holder.binding.recieverMsg.visibility = View.GONE
+                }
+
+                if (context != null) {
+                    Glide.with(context)
+                        .load(message.getMessage())
+                        .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                        .into(holder.binding.recieverImage)
+                }
+
+                holder.binding.recieverImage.setOnClickListener {
+                    val intent = Intent(context, MenuActivity::class.java)
+                    val options = ActivityOptionsCompat.makeSceneTransitionAnimation(context as Activity, holder.binding.recieverImage, ViewCompat.getTransitionName(holder.binding.recieverImage).toString())
+                    intent.putExtra("OptionName", "ImageViewer")
+                    intent.putExtra("Caption", message.getCaption())
+                    intent.putExtra("ImageURL", message.getMessage())
+                    context.startActivity(intent, options.toBundle())
+
+                }
             }
         }
+    }
+
+    private fun ellipsize(input: String?): String? {
+        return if (input == null || input.length < 100) {
+            input
+        } else input.substring(0, 100) + "..."
     }
 
 }

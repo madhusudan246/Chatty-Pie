@@ -4,7 +4,6 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.ActivityNotFoundException
-import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -14,6 +13,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.provider.Settings
+import android.text.method.ScrollingMovementMethod
 import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -22,6 +22,8 @@ import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
 import android.widget.ImageView
+import android.widget.ProgressBar
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -97,7 +99,11 @@ class Message : Fragment() {
             toolbarMessage=activity.findViewById(R.id.toolbarMenu)
         }
 
+        val fragmentManager = childFragmentManager
+
         toolbarMessage.visibility = View.GONE
+
+        binding?.chatMessage?.movementMethod = ScrollingMovementMethod()
 
         binding?.backArrowMessage?.drawable?.setTint(ContextCompat.getColor(requireContext(), R.color.grey))
 
@@ -236,7 +242,7 @@ class Message : Fragment() {
 
                     }
 
-                    messageAdapter = MessagesAdapter(activity!!, messageArrayList)
+                    messageAdapter = MessagesAdapter(activity!!, messageArrayList, fragmentManager)
 
                     binding?.chatRecyclerView?.adapter = messageAdapter
 
@@ -401,6 +407,8 @@ class Message : Fragment() {
         val captionMessage: TextInputEditText = dialog.findViewById(R.id.captionMessage)
         val selectedImg: ImageView = dialog.findViewById(R.id.selectedImage)
         val sendBtn: FloatingActionButton = dialog.findViewById(R.id.sendImgBtn)
+        val progressBar: ProgressBar = dialog.findViewById(R.id.progressBarSendImg)
+        val txt: TextView = dialog.findViewById(R.id.progressBarTxt)
 
         captionMessage.hint = "Caption here..."
 
@@ -410,8 +418,9 @@ class Message : Fragment() {
             .into(selectedImg)
 
         sendBtn.setOnClickListener {
+            progressBar.visibility = View.VISIBLE
+            txt.visibility = View.VISIBLE
             contentType = "Image"
-            dialog.dismiss()
 
             val byteArrayOutputStream = ByteArrayOutputStream()
             bitmap.compress(Bitmap.CompressFormat.JPEG, 75, byteArrayOutputStream)
@@ -466,15 +475,38 @@ class Message : Fragment() {
                                                                     "message",
                                                                     FieldValue.arrayUnion(message)
                                                                 )
+                                                                    .addOnSuccessListener {
+                                                                        progressBar.visibility = View.GONE
+                                                                        txt.visibility = View.GONE
+                                                                        dialog.dismiss()
+                                                                    }
+                                                                    .addOnFailureListener {
+                                                                        progressBar.visibility = View.GONE
+                                                                        txt.visibility = View.GONE
+                                                                        dialog.dismiss()
+                                                                    }
                                                                 Log.d("TAG", "Document already exists.")
                                                             } else {
 
                                                                 documentRef2.set(msg)
+                                                                    .addOnSuccessListener {
+                                                                        progressBar.visibility = View.GONE
+                                                                        txt.visibility = View.GONE
+                                                                        dialog.dismiss()
+                                                                    }
+                                                                    .addOnFailureListener {
+                                                                        progressBar.visibility = View.GONE
+                                                                        txt.visibility = View.GONE
+                                                                        dialog.dismiss()
+                                                                    }
                                                                 Log.d("TAG", "Document doesn't exist.")
                                                             }
                                                         }
                                                     } else {
                                                         Log.d("TAG", "Error: ", task.exception)
+                                                        progressBar.visibility = View.GONE
+                                                        txt.visibility = View.GONE
+                                                        dialog.dismiss()
                                                     }
                                                 }
                                             }
@@ -497,15 +529,38 @@ class Message : Fragment() {
                                                                     "message",
                                                                     FieldValue.arrayUnion(message)
                                                                 )
+                                                                    .addOnSuccessListener {
+                                                                        progressBar.visibility = View.GONE
+                                                                        txt.visibility = View.GONE
+                                                                        dialog.dismiss()
+                                                                    }
+                                                                    .addOnFailureListener {
+                                                                        progressBar.visibility = View.GONE
+                                                                        txt.visibility = View.GONE
+                                                                        dialog.dismiss()
+                                                                    }
                                                                 Log.d("TAG", "Document already exists.")
                                                             } else {
 
                                                                 documentRef2.set(msg)
+                                                                    .addOnSuccessListener {
+                                                                        progressBar.visibility = View.GONE
+                                                                        txt.visibility = View.GONE
+                                                                        dialog.dismiss()
+                                                                    }
+                                                                    .addOnFailureListener {
+                                                                        progressBar.visibility = View.GONE
+                                                                        txt.visibility = View.GONE
+                                                                        dialog.dismiss()
+                                                                    }
                                                                 Log.d("TAG", "Document doesn't exist.")
                                                             }
                                                         }
                                                     } else {
                                                         Log.d("TAG", "Error: ", task.exception)
+                                                        progressBar.visibility = View.GONE
+                                                        txt.visibility = View.GONE
+                                                        dialog.dismiss()
                                                     }
                                                 }
                                             }
@@ -514,12 +569,18 @@ class Message : Fragment() {
                                 }
                             } else {
                                 Log.d("TAG", "Error: ", task.exception)
+                                progressBar.visibility = View.GONE
+                                txt.visibility = View.GONE
+                                dialog.dismiss()
                             }
                         }
                     }
                 }
                 .addOnFailureListener { exception ->
                     Log.e("Status", "Failed to upload media", exception)
+                    progressBar.visibility = View.GONE
+                    txt.visibility = View.GONE
+                    dialog.dismiss()
                 }
         }
 

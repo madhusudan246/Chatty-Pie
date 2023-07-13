@@ -34,14 +34,26 @@
         app:layout_constraintStart_toEndOf="@+id/userProfilePicture"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <ImageView
+        android:id="@+id/contentImg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:importantForAccessibility="no"
+        android:paddingStart="@dimen/padding_text"
+        android:paddingEnd="@dimen/padding_text"
+        android:src="@drawable/ic_gallery"
+        android:visibility="invisible"
+        app:layout_constraintStart_toStartOf="@+id/conversationUser"
+        app:layout_constraintTop_toBottomOf="@+id/conversationUser" />
+
     <TextView
         android:id="@+id/recentMsg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/cairo"
-        android:text="@string/tap_to_chat"
         android:maxLines="1"
-        app:layout_constraintStart_toStartOf="@+id/conversationUser"
+        android:text="@string/tap_to_chat"
+        app:layout_constraintStart_toEndOf="@+id/contentImg"
         app:layout_constraintTop_toBottomOf="@+id/conversationUser" />
 
     <TextView
@@ -51,7 +63,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:fontFamily="@font/cairo_light"
-        android:text="6:00pm"
+        android:text="@string/_6_00pm"
         android:textSize="12sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

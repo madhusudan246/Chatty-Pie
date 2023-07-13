@@ -1,6 +1,7 @@
 package com.example.chatty.activities
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -9,6 +10,7 @@ import com.example.chatty.R
 import com.example.chatty.fragments.About
 import com.example.chatty.fragments.Contacts
 import com.example.chatty.databinding.ActivityMenuBinding
+import com.example.chatty.fragments.ImageViewer
 import com.example.chatty.fragments.Settings
 import com.example.chatty.fragments.StatusView
 import com.example.chatty.fragments.StoryViewer
@@ -48,6 +50,10 @@ class MenuActivity : AppCompatActivity() {
                 "Contacts" -> {
                     supportFragmentManager.beginTransaction().replace(R.id.frameLayout, Contacts()).commit()
                     binding.toolbarMenu.title = "Contacts"
+                }
+                "ImageViewer" -> {
+                    supportFragmentManager.beginTransaction().replace(R.id.frameLayout, ImageViewer()).commit()
+                    binding.toolbarMenu.title = "ImageViewer"
                 }
             }
         }

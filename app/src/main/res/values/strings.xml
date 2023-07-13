@@ -49,4 +49,9 @@
     <string name="sender_image_description">Image sent by user</string>
     <string name="caption">Caption Here...</string>
     <string name="upload_image_button">Upload Image button</string>
+    <string name="msg_image">MsgImage</string>
+    <string name="image_viewer_description">This shows the image been clicked to view</string>
+    <string name="show_more">Show more</string>
+    <string name="_6_00pm">6:00pm</string>
+    <string name="loading">Loading...</string>
 </resources>
